@@ -155,9 +155,9 @@
     /* Hero */
     .hero {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       height: 720px;
-      padding: 0 64px;
+      padding: 0 0 0 64px;
       max-width: 1440px;
       margin: 0 auto;
       position: relative;
@@ -167,9 +167,9 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 24px;
-      padding: 80px 0;
+      padding: 30px 48px 60px 0;
       z-index: 2;
     }
     .hero-badge {
@@ -236,24 +236,17 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-slider {
+    .hero-video-wrap {
       flex: 1;
       height: 100%;
       position: relative;
       overflow: hidden;
     }
-    .hero-slide {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transform: scale(1.05);
-      transition: opacity 1s ease, transform 1.2s ease;
-    }
-    .hero-slide.active {
-      opacity: 1;
-      transform: scale(1);
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .slider-nav {
       position: absolute;
@@ -724,6 +717,176 @@
     }
 
     svg { flex-shrink: 0; }
+
+    /* Cart icon wrap */
+    .cart-icon-wrap {
+      position: relative;
+      cursor: pointer;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: var(--orange);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: badgePop 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes badgePop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    /* Cart drawer */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .cart-overlay.open { opacity: 1; visibility: visible; }
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 420px;
+      height: 100vh;
+      background: var(--cream);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-drawer-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .cart-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray);
+      transition: transform 0.3s, color 0.3s;
+    }
+    .cart-close:hover { transform: rotate(90deg); color: var(--dark); }
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .cart-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: var(--light-gray);
+    }
+    .cart-empty svg { opacity: 0.3; }
+    .cart-empty p { font-family: var(--sans); font-size: 14px; letter-spacing: 1px; }
+    .cart-item {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      animation: fadeSlideUp 0.4s ease;
+    }
+    .cart-item-img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 15px; font-weight: 600; color: var(--dark); }
+    .cart-item-price { font-size: 14px; color: var(--green); margin-top: 4px; }
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: var(--border); }
+    .qty-num { font-size: 14px; font-weight: 600; min-width: 16px; text-align: center; }
+    .cart-item-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--light-gray);
+      transition: color 0.3s, transform 0.3s;
+      flex-shrink: 0;
+    }
+    .cart-item-remove:hover { color: var(--orange); transform: scale(1.2); }
+    .cart-footer {
+      padding: 24px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-total-label { font-family: var(--sans); font-size: 13px; letter-spacing: 1px; color: var(--gray); }
+    .cart-total-price { font-size: 22px; font-weight: 600; color: var(--dark); }
+    .btn-checkout {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      padding: 18px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .btn-checkout:hover { opacity: 0.9; transform: translateY(-2px); }
   </style>
 </head>
 <body>
@@ -745,7 +908,10 @@
       <a href="#contact">Կապ</a>
     </nav>
     <div class="header-cta">
-      <svg class="cart-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <div class="cart-icon-wrap" id="cartToggle">
+        <svg class="cart-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+      </div>
       <a href="#" class="btn-primary magnetic">ԱՄՐԱԳՐԵԼ</a>
     </div>
   </header>
@@ -763,20 +929,11 @@
         <a href="#collection" class="btn-hero-primary magnetic">ՏԵՍՆԵԼ ՀԱՎԱՔԱԾՈՒՆ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         <a href="#about" class="btn-hero-secondary magnetic">ՄԵՐ ՊԱՏՄՈՒԹՅՈՒՆԸ</a>
       </div>
-      <div class="hero-dots">
-        <div class="hero-dot active" data-slide="0"></div>
-        <div class="hero-dot" data-slide="1"></div>
-        <div class="hero-dot" data-slide="2"></div>
-      </div>
     </div>
-    <div class="hero-slider" id="heroSlider">
-      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1613508637039-3be226d7009c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80')"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1487530811176-3780de880c2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80')"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1725100313461-1608f9f3b3f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80')"></div>
-    </div>
-    <div class="slider-nav">
-      <button class="slider-btn prev" id="sliderPrev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <button class="slider-btn next" id="sliderNext"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div class="hero-video-wrap">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="video-1.MOV" type="video/mp4">
+      </video>
     </div>
     <div class="scroll-indicator">
       <div class="scroll-line"></div>
@@ -799,7 +956,7 @@
       <button class="filter-btn">Նվերների հավաքածու</button>
     </div>
     <div class="products-grid">
-      <div class="product-card reveal stagger-1">
+      <div class="product-card reveal stagger-1" data-name="Երևի" data-price="40,000 ֏" data-img="Երևի.JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Երևի.JPG" alt="Երևի" loading="lazy">
         </div>
@@ -811,7 +968,7 @@
           </div>
         </div>
       </div>
-      <div class="product-card reveal stagger-2">
+      <div class="product-card reveal stagger-2" data-name="Լույս է գալիս" data-price="55,000 ֏" data-img="Լույս է գալիս.JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Լույս է գալիս.JPG" alt="Լույս է գալիս" loading="lazy">
         </div>
@@ -823,7 +980,7 @@
           </div>
         </div>
       </div>
-      <div class="product-card reveal stagger-3">
+      <div class="product-card reveal stagger-3" data-name="Կինոյի պես" data-price="32,000 ֏" data-img="Կինոյի պես.JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Կինոյի պես.JPG" alt="Կինոյի պես" loading="lazy">
         </div>
@@ -835,7 +992,7 @@
           </div>
         </div>
       </div>
-      <div class="product-card reveal stagger-1">
+      <div class="product-card reveal stagger-1" data-name="Ճանապարհեցիր ինձ տուն" data-price="65,000 ֏" data-img="Ճանապարհեցիր ինձ տուն.JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Ճանապարհեցիր ինձ տուն.JPG" alt="Ճանապարհեցիր ինձ տուն" loading="lazy">
         </div>
@@ -847,7 +1004,7 @@
           </div>
         </div>
       </div>
-      <div class="product-card reveal stagger-2">
+      <div class="product-card reveal stagger-2" data-name="Սարերով ձորերով" data-price="65,000 ֏" data-img="Սարերով ձորերով .JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Սարերով ձորերով .JPG" alt="Սարերով ձորերով" loading="lazy">
         </div>
@@ -859,7 +1016,7 @@
           </div>
         </div>
       </div>
-      <div class="product-card reveal stagger-3">
+      <div class="product-card reveal stagger-3" data-name="Քամիներ" data-price="45,000 ֏" data-img="Քամիներ .JPG">
         <div class="product-image-wrap">
           <img class="product-image" src="Քամիներ .JPG" alt="Քամիներ" loading="lazy">
         </div>
@@ -1048,6 +1205,30 @@
     </div>
   </footer>
 
+  <!-- Cart Drawer -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <span class="cart-drawer-title">Զամբյուղ</span>
+      <button class="cart-close" id="cartClose">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty" id="cartEmpty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <p>ԶԱՄԲՅՈՒՂԸ ԴԱՏԱՐԿ Է</p>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total">
+        <span class="cart-total-label">ԸՆԴԱՄԵՆԸ</span>
+        <span class="cart-total-price" id="cartTotal">0 ֏</span>
+      </div>
+      <button class="btn-checkout" id="checkoutBtn">ՎՃԱՐԵԼ ՔԱՐՏՈՎ</button>
+    </div>
+  </div>
+
   <script>
     // Page loader
     window.addEventListener('load', () => {
@@ -1060,33 +1241,6 @@
       header.classList.toggle('scrolled', window.scrollY > 60);
     }, { passive: true });
 
-    // Hero slider
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.hero-dot');
-    let currentSlide = 0;
-    let slideInterval;
-
-    function goToSlide(n) {
-      slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
-      currentSlide = (n + slides.length) % slides.length;
-      slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
-    }
-
-    function startAutoSlide() {
-      slideInterval = setInterval(() => goToSlide(currentSlide + 1), 5000);
-    }
-
-    function resetAutoSlide() {
-      clearInterval(slideInterval);
-      startAutoSlide();
-    }
-
-    document.getElementById('sliderNext').addEventListener('click', () => { goToSlide(currentSlide + 1); resetAutoSlide(); });
-    document.getElementById('sliderPrev').addEventListener('click', () => { goToSlide(currentSlide - 1); resetAutoSlide(); });
-    dots.forEach(dot => dot.addEventListener('click', () => { goToSlide(+dot.dataset.slide); resetAutoSlide(); }));
-    startAutoSlide();
 
     // Scroll reveal with IntersectionObserver
     const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
@@ -1169,6 +1323,139 @@
       btn.addEventListener('mouseleave', () => {
         btn.style.transform = '';
       });
+    });
+
+    // Shopping Cart
+    let cart = [];
+
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartBadge = document.getElementById('cartBadge');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartEmpty = document.getElementById('cartEmpty');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    function openCart() {
+      cartDrawer.classList.add('open');
+      cartOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      cartDrawer.classList.remove('open');
+      cartOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('cartToggle').addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    function updateCartUI() {
+      const total = cart.reduce((sum, item) => {
+        const num = parseInt(item.price.replace(/[^0-9]/g, ''));
+        return sum + num * item.qty;
+      }, 0);
+      cartTotalEl.textContent = total.toLocaleString('hy-AM') + ' ֏';
+      cartBadge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+      const hasItems = cart.length > 0;
+      cartBadge.style.display = hasItems ? 'flex' : 'none';
+      cartFooter.style.display = hasItems ? 'flex' : 'none';
+      cartEmpty.style.display = hasItems ? 'none' : 'flex';
+
+      // Re-render items
+      Array.from(cartItemsEl.querySelectorAll('.cart-item')).forEach(el => el.remove());
+      cart.forEach((item, idx) => {
+        const el = document.createElement('div');
+        el.className = 'cart-item';
+        el.innerHTML = `
+          <img class="cart-item-img" src="${item.img}" alt="${item.name}">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${item.price}</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" data-idx="${idx}" data-action="dec">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" data-idx="${idx}" data-action="inc">+</button>
+            </div>
+          </div>
+          <button class="cart-item-remove" data-idx="${idx}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>`;
+        cartItemsEl.appendChild(el);
+      });
+
+      cartItemsEl.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = +btn.dataset.idx;
+          if (btn.dataset.action === 'inc') cart[idx].qty++;
+          else if (cart[idx].qty > 1) cart[idx].qty--;
+          else { cart.splice(idx, 1); }
+          updateCartUI();
+        });
+      });
+      cartItemsEl.querySelectorAll('.cart-item-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          cart.splice(+btn.dataset.idx, 1);
+          updateCartUI();
+        });
+      });
+    }
+
+    document.querySelectorAll('.cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.product-card');
+        const name = card.dataset.name;
+        const price = card.dataset.price;
+        const img = card.dataset.img;
+        const existing = cart.find(i => i.name === name);
+        if (existing) existing.qty++;
+        else cart.push({ name, price, img, qty: 1 });
+        updateCartUI();
+        openCart();
+
+        // Button flash feedback
+        btn.style.background = '#C45C26';
+        setTimeout(() => btn.style.background = '', 400);
+      });
+    });
+
+    // Checkout — Ameriabank vPOS
+    document.getElementById('checkoutBtn').addEventListener('click', async () => {
+      if (cart.length === 0) return;
+
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      checkoutBtn.textContent = 'Մշակվում է...';
+      checkoutBtn.disabled = true;
+
+      const totalAmount = cart.reduce((sum, item) => {
+        return sum + parseInt(item.price.replace(/[^0-9]/g, '')) * item.qty;
+      }, 0);
+
+      const description = cart.map(i => `${i.name} x${i.qty}`).join(', ');
+      const orderId = Date.now();
+
+      try {
+        const res = await fetch('/.netlify/functions/init-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: totalAmount, description, orderId }),
+        });
+
+        const data = await res.json();
+
+        if (data.redirectUrl) {
+          window.location.href = data.redirectUrl;
+        } else {
+          alert('Վճարման սխալ: ' + (data.error || 'Անհայտ սխալ'));
+          checkoutBtn.textContent = 'ՎՃԱՐԵԼ ՔԱՐՏՈՎ';
+          checkoutBtn.disabled = false;
+        }
+      } catch {
+        alert('Կապի սխալ։ Խնդրում ենք կրկին փորձել։');
+        checkoutBtn.textContent = 'ՎՃԱՐԵԼ ՔԱՐՏՈՎ';
+        checkoutBtn.disabled = false;
+      }
     });
   </script>
 </body>

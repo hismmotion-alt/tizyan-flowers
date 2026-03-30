@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Վճարման Արդյունք - Tizyan Flowers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Source Serif 4', serif;
+      background: #FBF8F4;
+      color: #1C1C1C;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      padding: 60px 48px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    }
+    .icon { font-size: 64px; margin-bottom: 24px; }
+    .title { font-size: 28px; font-weight: 600; margin-bottom: 12px; }
+    .subtitle { font-size: 16px; color: #5C5C5C; line-height: 1.6; margin-bottom: 32px; }
+    .detail { font-family: 'Barlow Semi Condensed', sans-serif; font-size: 13px; color: #8C8A87; letter-spacing: 1px; margin-bottom: 8px; }
+    .btn {
+      display: inline-block;
+      background: #3D7A5A;
+      color: #fff;
+      font-family: 'Barlow Semi Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      padding: 16px 40px;
+      text-decoration: none;
+      margin-top: 24px;
+      transition: opacity 0.3s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .loading { color: #8C8A87; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div id="content"><p class="loading">Ստուգվում է վճարումը...</p></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const paymentID = params.get('paymentid') || params.get('PaymentID');
+
+    async function checkPayment() {
+      if (!paymentID) {
+        showError();
+        return;
+      }
+
+      try {
+        const res = await fetch(`/.netlify/functions/confirm-payment?paymentID=${paymentID}`);
+        const data = await res.json();
+
+        // PaymentState 2 = completed/approved
+        if (data.paymentState === '2' || data.approvedAmount > 0) {
+          showSuccess(data);
+        } else {
+          showFailure();
+        }
+      } catch {
+        showError();
+      }
+    }
+
+    function showSuccess(data) {
+      document.getElementById('content').innerHTML = `
+        <div class="icon">🌸</div>
+        <div class="title" style="color:#3D7A5A;">Վճարումը հաջողվեց!</div>
+        <p class="subtitle">Շնորհակալություն ձեր պատվերի համար։ Շուտով կկապվենք ձեզ հետ։</p>
+        ${data.orderID ? `<p class="detail">ՊԱՏՎԵՐ #${data.orderID}</p>` : ''}
+        ${data.approvedAmount ? `<p class="detail">ԳՈՒՄԱՐ ${Number(data.approvedAmount).toLocaleString()} ֏</p>` : ''}
+        <a href="/" class="btn">ՎԵՐԱԴԱՌՆԱԼ ԿԱՅՔ</a>
+      `;
+    }
+
+    function showFailure() {
+      document.getElementById('content').innerHTML = `
+        <div class="icon">❌</div>
+        <div class="title" style="color:#C45C26;">Վճարումը չհաջողվեց</div>
+        <p class="subtitle">Ցավոք, վճարումը չի կատարվել։ Խնդրում ենք կրկին փորձել։</p>
+        <a href="/" class="btn">ԿՐԿԻՆ ՓՈՐՁԵԼ</a>
+      `;
+    }
+
+    function showError() {
+      document.getElementById('content').innerHTML = `
+        <div class="icon">⚠️</div>
+        <div class="title">Անհայտ սխալ</div>
+        <p class="subtitle">Վճարման կարգավիճակը հայտնի չէ։ Կապ հաստատեք մեզ հետ։</p>
+        <a href="/" class="btn">ՎԵՐԱԴԱՌՆԱԼ ԿԱՅՔ</a>
+      `;
+    }
+
+    checkPayment();
+  </script>
+</body>
+</html>
