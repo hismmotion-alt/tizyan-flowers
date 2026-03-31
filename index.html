@@ -426,8 +426,27 @@
     .product-image-wrap {
       position: relative;
       overflow: hidden;
+      cursor: crosshair;
     }
     .product-card:hover .product-image { transform: scale(1.05); }
+    .magnifier-lens {
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      pointer-events: none;
+      display: none;
+      overflow: hidden;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    .magnifier-lens img {
+      position: absolute;
+      max-width: none;
+      max-height: none;
+    }
     .product-tag {
       position: absolute;
       top: 12px;
@@ -1456,6 +1475,51 @@
         checkoutBtn.textContent = 'ՎՃԱՐԵԼ ՔԱՐՏՈՎ';
         checkoutBtn.disabled = false;
       }
+    });
+  </script>
+
+  <!-- Magnifier lens -->
+  <div class="magnifier-lens" id="magnifierLens">
+    <img id="magnifierImg" src="" alt="">
+  </div>
+  <script>
+    const lens = document.getElementById('magnifierLens');
+    const lensImg = document.getElementById('magnifierImg');
+    const ZOOM = 3.5;
+    const LENS_SIZE = 180;
+
+    document.querySelectorAll('.product-image-wrap').forEach(wrap => {
+      const img = wrap.querySelector('.product-image');
+
+      wrap.addEventListener('mouseenter', () => {
+        lensImg.src = img.src;
+        lens.style.display = 'block';
+      });
+
+      wrap.addEventListener('mouseleave', () => {
+        lens.style.display = 'none';
+      });
+
+      wrap.addEventListener('mousemove', (e) => {
+        const rect = img.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Position lens at cursor
+        lens.style.left = e.clientX + 'px';
+        lens.style.top = e.clientY + 'px';
+
+        // Scale image inside lens
+        const imgW = rect.width * ZOOM;
+        const imgH = rect.height * ZOOM;
+        const offsetX = x * ZOOM - LENS_SIZE / 2;
+        const offsetY = y * ZOOM - LENS_SIZE / 2;
+
+        lensImg.style.width = imgW + 'px';
+        lensImg.style.height = imgH + 'px';
+        lensImg.style.left = -offsetX + 'px';
+        lensImg.style.top = -offsetY + 'px';
+      });
     });
   </script>
 </body>
