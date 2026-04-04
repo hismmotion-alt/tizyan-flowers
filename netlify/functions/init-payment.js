@@ -7,11 +7,13 @@ exports.handler = async (event) => {
 
   console.log('init-payment received:', { amount, description, orderId });
 
+  const isTest = process.env.AMERIA_TEST_MODE === 'true';
+
   const payload = {
     ClientID: process.env.AMERIA_CLIENT_ID,
     Username: process.env.AMERIA_USERNAME,
     Password: process.env.AMERIA_PASSWORD,
-    Amount: amount,
+    Amount: isTest ? 10 : amount,
     OrderID: orderId,
     BackURL: 'https://tizyan.com/payment-result.html',
     Description: description,
