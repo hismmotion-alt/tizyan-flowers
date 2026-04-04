@@ -52,7 +52,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const paymentID = params.get('paymentid') || params.get('PaymentID');
+    const paymentID = params.get('paymentID') || params.get('paymentid') || params.get('PaymentID');
 
     async function checkPayment() {
       if (!paymentID) {
