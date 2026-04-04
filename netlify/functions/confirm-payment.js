@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     Password: process.env.AMERIA_PASSWORD,
   };
 
-  const response = await fetch('https://services.ameriabank.am/VPOS/api/VPOS/GetPaymentDetails', {
+  const response = await fetch('https://servicestest.ameriabank.am/VPOS/api/VPOS/GetPaymentDetails', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

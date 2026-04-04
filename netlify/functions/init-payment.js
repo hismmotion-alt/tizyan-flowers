@@ -13,10 +13,10 @@ exports.handler = async (event) => {
     OrderID: orderId,
     BackURL: 'https://tizyan.com/payment-result.html',
     Description: description,
-    Currency: 'AMD',
+    Currency: '051',
   };
 
-  const response = await fetch('https://services.ameriabank.am/VPOS/api/VPOS/InitPayment', {
+  const response = await fetch('https://servicestest.ameriabank.am/VPOS/api/VPOS/InitPayment', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -29,7 +29,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         paymentID: data.PaymentID,
-        redirectUrl: `https://services.ameriabank.am/VPOS/Payments/Pay?id=${data.PaymentID}&lang=am`,
+        redirectUrl: `https://servicestest.ameriabank.am/VPOS/Payments/Pay?id=${data.PaymentID}&lang=am`,
       }),
     };
   }
