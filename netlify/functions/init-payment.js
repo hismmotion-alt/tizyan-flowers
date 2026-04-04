@@ -5,6 +5,8 @@ exports.handler = async (event) => {
 
   const { amount, description, orderId } = JSON.parse(event.body);
 
+  console.log('init-payment received:', { amount, description, orderId });
+
   const payload = {
     ClientID: process.env.AMERIA_CLIENT_ID,
     Username: process.env.AMERIA_USERNAME,
@@ -23,6 +25,8 @@ exports.handler = async (event) => {
   });
 
   const data = await response.json();
+
+  console.log('Ameriabank response:', JSON.stringify(data));
 
   if (data.ResponseCode === 1 && data.PaymentID) {
     return {
